@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mtaani Threads</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14213d; --gold:#f2a900; --chalk:#f5f7fa; --teal:#1f7a8c; --line:#d9dfe8; --white:#fff;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:var(--chalk);color:var(--ink);line-height:1.5}
+  h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif;line-height:1.1}
+
+  header{background:var(--ink);color:var(--white);padding:56px 20px 64px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:var(--gold);opacity:.95}
+  .wrap{max-width:1050px;margin:0 auto;position:relative;z-index:1}
+  .brand{font-weight:700;color:var(--gold);margin-bottom:18px}
+  header h1{font-size:clamp(2.4rem,7vw,4.6rem);font-weight:800;max-width:11ch}
+  header p{margin-top:16px;max-width:38ch;color:#cfd7e6}
+  .mpesa{display:inline-block;margin-top:22px;background:var(--white);color:var(--ink);padding:6px 14px;border-radius:99px;font-weight:700;font-size:.9rem}
+  .mpesa b{color:#2e9d3f}
+
+  main{max-width:1050px;margin:0 auto;padding:48px 20px 72px}
+  section+section{margin-top:56px}
+  h2{font-size:1.9rem;font-weight:800;margin-bottom:6px}
+  .sub{color:#5a6784;margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+  .swatch{height:190px;display:grid;place-items:center}
+  .swatch svg{width:120px;height:120px}
+  .swatch img{width:100%;height:100%;object-fit:cover;display:block}
+  .swatch.has-img{height:250px}
+  .swatch.has-img svg{display:none}
+  .body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  h3{font-size:1.25rem;font-weight:800}
+  .price{font-weight:700;color:var(--teal);white-space:nowrap}
+  .desc{font-size:.95rem;color:#4b5876}
+  dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.9rem;border-top:1px dashed var(--line);padding-top:10px}
+  dt{color:#7a86a0}
+  dd{font-weight:500}
+  .row{margin-top:auto;display:flex;gap:10px;align-items:center;padding-top:8px}
+  select{flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--white)}
+  button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:8px;padding:11px 18px;background:var(--gold);color:var(--ink)}
+  button:hover{background:#dc9800}
+  button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+
+  dialog{border:0;border-radius:14px;padding:26px;width:min(92vw,380px);color:var(--ink)}
+  dialog::backdrop{background:rgba(20,33,61,.6)}
+  dialog h3{margin-bottom:4px}
+  dialog p{margin-bottom:14px;color:#4b5876;font-size:.95rem}
+  label{display:block;font-weight:500;font-size:.9rem;margin-bottom:6px}
+  input{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;font:inherit;margin-bottom:16px}
+  .actions{display:flex;gap:10px}
+  .actions .ghost{background:var(--chalk)}
+  .actions button:last-child{flex:1}
+  #msg{margin-top:12px;font-size:.9rem;color:var(--teal);min-height:1.2em}
+
+  footer{background:var(--ink);color:#cfd7e6;text-align:center;padding:22px;font-size:.9rem}
+</style>
+</head>
+<body>
+
+<!-- Reusable garment shapes -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="shirt" viewBox="0 0 100 100"><path d="M35 12 L14 24 L22 42 L30 38 L30 88 L70 88 L70 38 L78 42 L86 24 L65 12 Q50 24 35 12Z" fill="currentColor"/></symbol>
+  <symbol id="trouser" viewBox="0 0 100 100"><path d="M28 8 H72 L78 92 H55 L50 40 L45 92 H22 Z" fill="currentColor"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Mtaani Threads</div>
+    <h1>Good cloth, fair prices.</h1>
+    <p>Three shirts and three trousers, picked for everyday wear. Choose your size and pay.</p>
+    <span class="mpesa">Pay with <b>M-PESA</b></span>
+  </div>
+</header>
+
+<main>
+  <section>
+    <h2>Shirts</h2>
+    <p class="sub">Cut for comfort in Kenyan weather.</p>
+    <div class="grid" id="shirts"></div>
+  </section>
+  <section>
+    <h2>Trousers</h2>
+    <p class="sub">Sturdy stitching that lasts.</p>
+    <div class="grid" id="trousers"></div>
+  </section>
+</main>
+
+<footer>Mtaani Threads &middot; Student project</footer>
+
+<dialog id="payDialog">
+  <h3>Pay with M-PESA</h3>
+  <p id="payItem"></p>
+  <label for="phone">M-PESA phone number</label>
+  <input id="phone" type="tel" placeholder="07XX XXX XXX" inputmode="tel">
+  <div class="actions">
+    <button class="ghost" id="cancelBtn" type="button">Cancel</button>
+    <button id="confirmBtn" type="button">Pay</button>
+  </div>
+  <div id="msg" role="status"></div>
+</dialog>
+
+<script>
+  let products = [];
+
+  const kes = n => 'KES ' + n.toLocaleString('en-KE');
+
+  function cardHTML(p){
+    return `
+    <article class="card">
+      <div class="swatch${p.image ? ' has-img' : ''}" style="background:${p.bg};color:${p.color}">
+        ${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.parentNode.classList.remove('has-img');this.remove()">` : ''}
+        <svg aria-hidden="true"><use href="#${p.type}"/></svg>
+      </div>
+      <div class="body">
+        <div class="top"><h3>${p.name}</h3><span class="price">${kes(p.price)}</span></div>
+        <p class="desc">${p.desc}</p>
+        <dl><dt>Fabric</dt><dd>${p.fabric}</dd><dt>Fit</dt><dd>${p.fit}</dd></dl>
+        <div class="row">
+          <select aria-label="Size for ${p.name}" id="size-${p.id}">
+            ${p.sizes.map(s=>`<option>${s}</option>`).join('')}
+          </select>
+          <button type="button" data-id="${p.id}">Pay now</button>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  // Products come from the server so prices can't be edited in the browser
+  fetch('/api/products').then(r=>r.json()).then(list=>{
+    products = list;
+    document.getElementById('shirts').innerHTML   = products.filter(p=>p.type==='shirt').map(cardHTML).join('');
+    document.getElementById('trousers').innerHTML = products.filter(p=>p.type==='trouser').map(cardHTML).join('');
+  }).catch(()=>{
+    document.querySelector('main').insertAdjacentHTML('afterbegin','<p class="sub">Could not load products. Is the server running?</p>');
+  });
+
+  // ---- Pay dialog ----
+  const dialog = document.getElementById('payDialog');
+  const msg = document.getElementById('msg');
+  let selected = null;
+
+  document.addEventListener('click', e=>{
+    const btn = e.target.closest('button[data-id]');
+    if(!btn) return;
+    const p = products.find(x=>x.id===btn.dataset.id);
+    const size = document.getElementById('size-'+p.id).value;
+    selected = {id:p.id, name:p.name, size, amount:p.price};
+    document.getElementById('payItem').textContent = `${p.name} (size ${size}) - ${kes(p.price)}`;
+    msg.textContent = '';
+    dialog.showModal();
+  });
+
+  document.getElementById('cancelBtn').onclick = ()=>dialog.close();
+
+  document.getElementById('confirmBtn').onclick = async ()=>{
+    const phone = document.getElementById('phone').value.replace(/\s+/g,'');
+    if(!/^(07|01)\d{8}$/.test(phone)){ msg.textContent = 'Enter a valid phone number, e.g. 0712345678.'; return; }
+    msg.textContent = 'Sending payment request...';
+    const result = await payWithMpesa({phone, amount:selected.amount, id:selected.id, item:selected.name, size:selected.size});
+    msg.textContent = result.message;
+  };
+
+  // Talks to our own backend (server.js), which calls M-PESA.
+  async function payWithMpesa(order){
+    const btn = document.getElementById('confirmBtn');
+    btn.disabled = true;
+    try{
+      const r = await fetch('/api/pay', {method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({productId:order.id, size:order.size, phone:order.phone})});
+      const d = await r.json();
+      if(!r.ok) return {success:false, message:d.error || 'Could not start payment.'};
+      msg.textContent = 'Check your phone and enter your M-PESA PIN...';
+      for(let i=0;i<30;i++){
+        await new Promise(res=>setTimeout(res,3000));
+        const s = await (await fetch('/api/pay/status/'+d.checkoutRequestId)).json();
+        if(s.status==='paid') return {success:true, message:'Payment received. Receipt '+s.receipt+'. Asante!'};
+        if(s.status==='failed') return {success:false, message:s.message};
+      }
+      return {success:false, message:'Timed out. If money was deducted, please contact us.'};
+    }catch(e){
+      return {success:false, message:'Network error. Please try again.'};
+    }finally{
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
