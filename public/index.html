@@ -22,16 +22,16 @@
   .mpesa{display:inline-block;margin-top:22px;background:var(--white);color:var(--ink);padding:6px 14px;border-radius:99px;font-weight:700;font-size:.9rem}
   .mpesa b{color:#2e9d3f}
 
-  main{max-width:1050px;margin:0 auto;padding:48px 20px 72px}
+  main{max-width:1050px;margin:0 auto;padding:48px 20px 110px}
   section+section{margin-top:56px}
   h2{font-size:1.9rem;font-weight:800;margin-bottom:6px}
   .sub{color:#5a6784;margin-bottom:22px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
 
   .card{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-  .swatch{height:190px;display:grid;place-items:center}
+  .swatch{height:190px;display:grid;place-items:center;position:relative;overflow:hidden}
   .swatch svg{width:120px;height:120px}
-  .swatch img{width:100%;height:100%;object-fit:cover;display:block}
+  .swatch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
   .swatch.has-img{height:250px}
   .swatch.has-img svg{display:none}
   .body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
@@ -42,21 +42,55 @@
   dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.9rem;border-top:1px dashed var(--line);padding-top:10px}
   dt{color:#7a86a0}
   dd{font-weight:500}
-  .row{margin-top:auto;display:flex;gap:10px;align-items:center;padding-top:8px}
-  select{flex:1;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--white)}
+  .pick{margin-top:auto;display:flex;gap:10px;align-items:center;padding-top:8px}
+  .pick label{font-size:.8rem;color:#7a86a0;display:block;margin:0 0 2px}
+  .pick .field{flex:1}
+  select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--white)}
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--white)}
+  .stepper button{border-radius:0;background:var(--chalk);padding:10px 13px;line-height:1;color:var(--ink)}
+  .stepper button:hover{background:var(--line)}
+  .stepper span{min-width:34px;text-align:center;font-weight:700}
+  .addbtn{width:100%;margin-top:4px}
   button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:8px;padding:11px 18px;background:var(--gold);color:var(--ink)}
   button:hover{background:#dc9800}
+  button:disabled{opacity:.55;cursor:not-allowed}
   button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 
-  dialog{border:0;border-radius:14px;padding:26px;width:min(92vw,380px);color:var(--ink)}
-  dialog::backdrop{background:rgba(20,33,61,.6)}
-  dialog h3{margin-bottom:4px}
-  dialog p{margin-bottom:14px;color:#4b5876;font-size:.95rem}
-  label{display:block;font-weight:500;font-size:.9rem;margin-bottom:6px}
-  input{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;font:inherit;margin-bottom:16px}
-  .actions{display:flex;gap:10px}
-  .actions .ghost{background:var(--chalk)}
-  .actions button:last-child{flex:1}
+  /* floating cart button + toast */
+  .fab{position:fixed;right:18px;bottom:18px;z-index:10;display:flex;align-items:center;gap:10px;border-radius:99px;padding:13px 20px;background:var(--ink);color:var(--white);box-shadow:0 6px 18px rgba(20,33,61,.35)}
+  .fab:hover{background:#0d1730}
+  .count{background:var(--gold);color:var(--ink);border-radius:99px;min-width:24px;padding:1px 8px;font-size:.85rem;text-align:center}
+  #fabTotal{font-weight:500;font-size:.9rem;color:#cfd7e6}
+  .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:var(--white);padding:10px 18px;border-radius:99px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:12;max-width:90vw;text-align:center}
+  .toast.show{opacity:1}
+
+  /* hanging (slide-out) cart */
+  .scrim{position:fixed;inset:0;background:rgba(20,33,61,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(100vw,440px);background:var(--white);z-index:21;display:flex;flex-direction:column;
+    transform:translateX(100%);visibility:hidden;transition:transform .25s,visibility 0s .25s;box-shadow:-8px 0 30px rgba(20,33,61,.25)}
+  .drawer.open{transform:none;visibility:visible;transition:transform .25s}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}
+  .drawer-head h3{font-size:1.4rem}
+  .drawer-head button{background:var(--chalk);padding:8px 14px}
+  .drawer-body{flex:1;overflow:auto;padding:4px 22px}
+  .drawer-foot{padding:16px 22px 22px;border-top:1px solid var(--line);background:var(--chalk)}
+  .empty{color:#5a6784;padding:22px 0}
+  .line{display:grid;grid-template-columns:64px 1fr auto;gap:12px;padding:14px 0;border-bottom:1px dashed var(--line);align-items:center}
+  .thumb{width:64px;height:64px;border-radius:10px;overflow:hidden;display:grid;place-items:center}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .thumb svg{width:38px;height:38px}
+  .line .name{font-weight:700;line-height:1.2}
+  .line .meta{font-size:.85rem;color:#7a86a0}
+  .line .sum{font-weight:700;color:var(--teal);text-align:right;white-space:nowrap}
+  .qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .qty button{padding:3px 10px;background:var(--chalk);border:1px solid var(--line)}
+  .qty button:hover{background:var(--line)}
+  .qty .del{background:none;border:0;color:#b3261e;font-weight:500;font-size:.85rem;padding:4px 6px}
+  .total{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:800;padding-bottom:14px}
+  .drawer-foot label{display:block;font-weight:500;font-size:.9rem;margin-bottom:6px}
+  input{width:100%;padding:11px;border:1px solid var(--line);border-radius:8px;font:inherit;margin-bottom:14px;background:var(--white)}
+  #payBtn{width:100%;padding:13px}
   #msg{margin-top:12px;font-size:.9rem;color:var(--teal);min-height:1.2em}
 
   footer{background:var(--ink);color:#cfd7e6;text-align:center;padding:22px;font-size:.9rem}
@@ -64,7 +98,7 @@
 </head>
 <body>
 
-<!-- Reusable garment shapes -->
+<!-- Fallback garment shapes (used when an item has no picture) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="shirt" viewBox="0 0 100 100"><path d="M35 12 L14 24 L22 42 L30 38 L30 88 L70 88 L70 38 L78 42 L86 24 L65 12 Q50 24 35 12Z" fill="currentColor"/></symbol>
   <symbol id="trouser" viewBox="0 0 100 100"><path d="M28 8 H72 L78 92 H55 L50 40 L45 92 H22 Z" fill="currentColor"/></symbol>
@@ -74,7 +108,7 @@
   <div class="wrap">
     <div class="brand">Mtaani Threads</div>
     <h1>Good cloth, fair prices.</h1>
-    <p>Three shirts and three trousers, picked for everyday wear. Choose your size and pay.</p>
+    <p>Three shirts and three trousers, picked for everyday wear. Add what you like to your cart and pay once.</p>
     <span class="mpesa">Pay with <b>M-PESA</b></span>
   </div>
 </header>
@@ -94,22 +128,32 @@
 
 <footer>Mtaani Threads &middot; Student project</footer>
 
-<dialog id="payDialog">
-  <h3>Pay with M-PESA</h3>
-  <p id="payItem"></p>
-  <label for="phone">M-PESA phone number</label>
-  <input id="phone" type="tel" placeholder="07XX XXX XXX" inputmode="tel">
-  <div class="actions">
-    <button class="ghost" id="cancelBtn" type="button">Cancel</button>
-    <button id="confirmBtn" type="button">Pay</button>
+<button class="fab" id="cartBtn" type="button" aria-label="Open cart">Cart <span class="count" id="cartCount">0</span> <span id="fabTotal"></span></button>
+<div class="toast" id="toast" role="status"></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="drawer-head"><h3>Your cart</h3><button type="button" id="closeBtn">Close</button></div>
+  <div class="drawer-body" id="cartLines"></div>
+  <div class="drawer-foot">
+    <div class="total"><span>Total</span><span id="cartTotal">KES 0</span></div>
+    <label for="phone">M-PESA phone number</label>
+    <input id="phone" type="tel" placeholder="07XX XXX XXX" inputmode="tel" autocomplete="tel">
+    <button id="payBtn" type="button">Pay with M-PESA</button>
+    <div id="msg" role="status"></div>
   </div>
-  <div id="msg" role="status"></div>
-</dialog>
+</aside>
 
 <script>
-  let products = [];
-
   const kes = n => 'KES ' + n.toLocaleString('en-KE');
+  const $ = id => document.getElementById(id);
+  const msg = $('msg');
+  const MAX = 10;                       // max per line
+  let products = [];
+  let cart = [];                        // [{id, size, qty}]
+  try { cart = JSON.parse(localStorage.getItem('mt_cart') || '[]'); } catch(e) { cart = []; }
+  const saveCart = () => { try { localStorage.setItem('mt_cart', JSON.stringify(cart)); } catch(e) {} };
+  const byId = id => products.find(p => p.id === id);
 
   function cardHTML(p){
     return `
@@ -122,72 +166,137 @@
         <div class="top"><h3>${p.name}</h3><span class="price">${kes(p.price)}</span></div>
         <p class="desc">${p.desc}</p>
         <dl><dt>Fabric</dt><dd>${p.fabric}</dd><dt>Fit</dt><dd>${p.fit}</dd></dl>
-        <div class="row">
-          <select aria-label="Size for ${p.name}" id="size-${p.id}">
-            ${p.sizes.map(s=>`<option>${s}</option>`).join('')}
-          </select>
-          <button type="button" data-id="${p.id}">Pay now</button>
+        <div class="pick">
+          <div class="field"><label for="size-${p.id}">Size</label>
+            <select id="size-${p.id}">${p.sizes.map(s=>`<option>${s}</option>`).join('')}</select></div>
+          <div><label>Quantity</label>
+            <div class="stepper">
+              <button type="button" data-q="dec" data-id="${p.id}" aria-label="Fewer">&minus;</button>
+              <span id="q-${p.id}">1</span>
+              <button type="button" data-q="inc" data-id="${p.id}" aria-label="More">+</button>
+            </div></div>
         </div>
+        <button type="button" class="addbtn" data-add="${p.id}">Add to cart</button>
       </div>
     </article>`;
   }
 
-  // Products come from the server so prices can't be edited in the browser
+  // Products (and prices) come from the server
   fetch('/api/products').then(r=>r.json()).then(list=>{
     products = list;
-    document.getElementById('shirts').innerHTML   = products.filter(p=>p.type==='shirt').map(cardHTML).join('');
-    document.getElementById('trousers').innerHTML = products.filter(p=>p.type==='trouser').map(cardHTML).join('');
+    $('shirts').innerHTML   = products.filter(p=>p.type==='shirt').map(cardHTML).join('');
+    $('trousers').innerHTML = products.filter(p=>p.type==='trouser').map(cardHTML).join('');
+    cart = cart.filter(c => byId(c.id) && byId(c.id).sizes.includes(c.size));   // drop stale items
+    renderCart();
   }).catch(()=>{
     document.querySelector('main').insertAdjacentHTML('afterbegin','<p class="sub">Could not load products. Is the server running?</p>');
   });
 
-  // ---- Pay dialog ----
-  const dialog = document.getElementById('payDialog');
-  const msg = document.getElementById('msg');
-  let selected = null;
+  // ---- Cart ----
+  function toast(text){
+    const t = $('toast'); t.textContent = text; t.classList.add('show');
+    clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove('show'), 2200);
+  }
 
-  document.addEventListener('click', e=>{
-    const btn = e.target.closest('button[data-id]');
-    if(!btn) return;
-    const p = products.find(x=>x.id===btn.dataset.id);
-    const size = document.getElementById('size-'+p.id).value;
-    selected = {id:p.id, name:p.name, size, amount:p.price};
-    document.getElementById('payItem').textContent = `${p.name} (size ${size}) - ${kes(p.price)}`;
-    msg.textContent = '';
-    dialog.showModal();
+  const cartTotal = () => cart.reduce((sum, c) => sum + (byId(c.id)?.price || 0) * c.qty, 0);
+
+  function renderCart(){
+    const count = cart.reduce((n, c) => n + c.qty, 0);
+    $('cartCount').textContent = count;
+    $('fabTotal').textContent = count ? kes(cartTotal()) : '';
+    $('cartTotal').textContent = kes(cartTotal());
+    $('payBtn').disabled = cart.length === 0;
+    $('cartLines').innerHTML = cart.length ? cart.map((c, i) => {
+      const p = byId(c.id);
+      return `<div class="line">
+        <div class="thumb" style="background:${p.bg};color:${p.color}">${p.image
+          ? `<img src="${p.image}" alt="">` : `<svg aria-hidden="true"><use href="#${p.type}"/></svg>`}</div>
+        <div><div class="name">${p.name}</div><div class="meta">Size ${c.size} &middot; ${kes(p.price)} each</div>
+          <div class="qty">
+            <button type="button" data-act="dec" data-i="${i}" aria-label="Fewer">&minus;</button>
+            <span>${c.qty}</span>
+            <button type="button" data-act="inc" data-i="${i}" aria-label="More">+</button>
+            <button type="button" class="del" data-act="del" data-i="${i}">Remove</button>
+          </div></div>
+        <div class="sum">${kes(p.price * c.qty)}</div>
+      </div>`;
+    }).join('') : '<p class="empty">Your cart is empty. Pick a size and quantity on any item, then press Add to cart.</p>';
+  }
+
+  function openCart(){
+    msg.textContent = ''; renderCart();
+    $('drawer').classList.add('open'); $('scrim').classList.add('open'); $('drawer').setAttribute('aria-hidden','false');
+  }
+  function closeCart(){
+    $('drawer').classList.remove('open'); $('scrim').classList.remove('open'); $('drawer').setAttribute('aria-hidden','true');
+  }
+  $('cartBtn').onclick = openCart;
+  $('closeBtn').onclick = closeCart;
+  $('scrim').onclick = closeCart;
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+
+  document.addEventListener('click', e => {
+    // quantity picker on a product card
+    const q = e.target.closest('[data-q]');
+    if (q) {
+      const el = $('q-' + q.dataset.id); let n = +el.textContent;
+      n = q.dataset.q === 'inc' ? Math.min(MAX, n + 1) : Math.max(1, n - 1);
+      el.textContent = n; return;
+    }
+    // Add to cart
+    const add = e.target.closest('[data-add]');
+    if (add) {
+      const p = byId(add.dataset.add);
+      const size = $('size-' + p.id).value, n = +$('q-' + p.id).textContent;
+      const line = cart.find(c => c.id === p.id && c.size === size);
+      if (line) line.qty = Math.min(MAX, line.qty + n); else cart.push({id:p.id, size, qty:n});
+      saveCart(); renderCart();
+      $('q-' + p.id).textContent = '1';
+      toast(`${n} × ${p.name} (size ${size}) added. Tap Cart to review and pay.`);
+      return;
+    }
+    // change a line inside the cart
+    const act = e.target.closest('[data-act]');
+    if (act) {
+      const i = +act.dataset.i, a = act.dataset.act;
+      if (a === 'inc') cart[i].qty = Math.min(MAX, cart[i].qty + 1);
+      if (a === 'dec') cart[i].qty -= 1;
+      if (a === 'del' || cart[i].qty < 1) cart.splice(i, 1);
+      saveCart(); renderCart();
+    }
   });
 
-  document.getElementById('cancelBtn').onclick = ()=>dialog.close();
-
-  document.getElementById('confirmBtn').onclick = async ()=>{
-    const phone = document.getElementById('phone').value.replace(/\s+/g,'');
-    if(!/^(07|01)\d{8}$/.test(phone)){ msg.textContent = 'Enter a valid phone number, e.g. 0712345678.'; return; }
+  // ---- Pay for everything in the cart with one M-PESA prompt ----
+  $('payBtn').onclick = async () => {
+    const phone = $('phone').value.replace(/\s+/g, '');
+    if (!/^(07|01)\d{8}$/.test(phone)) { msg.textContent = 'Enter a valid phone number, e.g. 0712345678.'; return; }
+    $('payBtn').disabled = true;
     msg.textContent = 'Sending payment request...';
-    const result = await payWithMpesa({phone, amount:selected.amount, id:selected.id, item:selected.name, size:selected.size});
+    const result = await payWithMpesa({
+      phone,
+      items: cart.map(c => ({productId: c.id, size: c.size, qty: c.qty}))
+    });
     msg.textContent = result.message;
+    if (result.success) { cart = []; saveCart(); }
+    renderCart();                       // re-enables Pay only if items remain
   };
 
-  // Talks to our own backend (server.js), which calls M-PESA.
+  // Talks to our own backend (app.py), which calls M-PESA
   async function payWithMpesa(order){
-    const btn = document.getElementById('confirmBtn');
-    btn.disabled = true;
     try{
-      const r = await fetch('/api/pay', {method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({productId:order.id, size:order.size, phone:order.phone})});
+      const r = await fetch('/api/pay', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(order)});
       const d = await r.json();
-      if(!r.ok) return {success:false, message:d.error || 'Could not start payment.'};
+      if (!r.ok) return {success:false, message: d.error || 'Could not start payment.'};
       msg.textContent = 'Check your phone and enter your M-PESA PIN...';
-      for(let i=0;i<30;i++){
-        await new Promise(res=>setTimeout(res,3000));
-        const s = await (await fetch('/api/pay/status/'+d.checkoutRequestId)).json();
-        if(s.status==='paid') return {success:true, message:'Payment received. Receipt '+s.receipt+'. Asante!'};
-        if(s.status==='failed') return {success:false, message:s.message};
+      for (let i = 0; i < 30; i++) {
+        await new Promise(res => setTimeout(res, 3000));
+        const s = await (await fetch('/api/pay/status/' + d.checkoutRequestId)).json();
+        if (s.status === 'paid')   return {success:true, message:'Payment received (' + kes(d.total) + '). Receipt ' + s.receipt + '. Asante!'};
+        if (s.status === 'failed') return {success:false, message: s.message};
       }
       return {success:false, message:'Timed out. If money was deducted, please contact us.'};
     }catch(e){
       return {success:false, message:'Network error. Please try again.'};
-    }finally{
-      btn.disabled = false;
     }
   }
 </script>
